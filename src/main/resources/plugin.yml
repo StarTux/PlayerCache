@@ -1,0 +1,19 @@
+name: PlayerCache
+description: Create a cache of player UUIDs and names for other plugins
+author: StarTux
+version: 0.1
+database: true
+main: com.winthier.playercache.bukkit.PlayerCachePlugin
+depend: []
+commands:
+  playercache:
+    description: Admin interface
+    permission: playercache.playercache
+    usage: |-
+      /<command> uuid <name> - get UUID for name
+      /<command> name <uuid> - get name for UUID
+      /<command> legacy <name> - get UUID for legacy name
+permissions:
+  playercache.playercache:
+    description: Use the admin interface
+    default: op
