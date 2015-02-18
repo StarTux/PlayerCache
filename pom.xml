@@ -4,12 +4,19 @@
   <groupId>com.winthier.playercache</groupId>
   <artifactId>playercache</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1</version>
   <name>playercache</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  <repositories>
+    <!-- Repository for Spigot -->
+    <repository>
+      <id>spigot-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
   <dependencies>
     <!-- JUnit -->
     <dependency>
