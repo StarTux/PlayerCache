@@ -3,7 +3,6 @@ package com.winthier.playercache.bukkit;
 import com.winthier.playercache.PlayerCache;
 import com.winthier.playercache.sql.PlayerTable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.PersistenceException;
@@ -89,26 +88,16 @@ public class PlayerCachePlugin extends JavaPlugin {
     }
 
     public void logPlayer(Player player) {
-        val list = getDatabase().find(PlayerTable.class).where().eq("uuid", player.getUniqueId()).findList();
-        if (list.isEmpty()) {
+        PlayerTable row = PlayerTable.forUuid(player.getUniqueId());
+        if (row == null) {
             getLogger().info(String.format("Saving player %s with UUID %s", player.getName(), player.getUniqueId()));
-            PlayerTable column = new PlayerTable(player.getUniqueId(), player.getName(), new Date());
-            try {
-                getDatabase().save(column);
-            } catch (PersistenceException pe) {
-                pe.printStackTrace();
-            }
+            row = new PlayerTable(player.getUniqueId(), player.getName());
+            PlayerTable.save(row);
         } else {
-            PlayerTable column = list.get(0);
-            if (!column.getName().equals(player.getName())) {
-                getLogger().info(String.format("Player %s with UUID %s changed their name to %s", column.getName(), column.getUuid(), player.getName()));
-                column.setName(player.getName());
-                column.setDateUpdated(new Date());
-                try {
-                    getDatabase().save(column);
-                } catch (PersistenceException pe) {
-                    pe.printStackTrace();
-                }
+            if (!row.getName().equals(player.getName())) {
+                getLogger().info(String.format("Player %s with UUID %s changed their name to %s", row.getName(), row.getUuid(), player.getName()));
+                row.setName(player.getName());
+                PlayerTable.save(row);
             }
         }
     }

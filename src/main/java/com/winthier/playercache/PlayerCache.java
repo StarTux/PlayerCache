@@ -16,43 +16,30 @@ public class PlayerCache {
     private final String name;
 
     private static PlayerCache cacheForColumn(PlayerTable table) {
+        if (table == null) return null;
         return new PlayerCache(table.getUuid(), table.getName());
     }
 
-    private static List<PlayerTable> columnsForUuid(UUID uuid) {
-        if (uuid == null) throw new NullPointerException("UUID can't be null");
-        return PlayerCachePlugin.getInstance().getDatabase().find(PlayerTable.class).where().eq("uuid", uuid).findList();
-    }
-
-    private static List<PlayerTable> columnsForName(String name) {
-        if (name == null) throw new NullPointerException("Name can't be null");
-        return PlayerCachePlugin.getInstance().getDatabase().find(PlayerTable.class).where().eq("name", name).orderBy("date_updated desc").findList();
-    }
-
     public static PlayerCache forUuid(UUID uuid) {
-        val result = columnsForUuid(uuid);
-        if (result.isEmpty()) return null;
-        return cacheForColumn(result.get(0));
+        return cacheForColumn(PlayerTable.forUuid(uuid));
     }
 
     public static PlayerCache forName(String name) {
-        val result = columnsForName(name);
-        if (result.isEmpty()) return null;
-        return cacheForColumn(result.get(0));
+        return cacheForColumn(PlayerTable.forName(name));
     }
 
     public static String nameForUuid(UUID uuid) {
         final Player player = Bukkit.getServer().getPlayer(uuid);
         if (player != null) return player.getName();
-        val list = columnsForUuid(uuid);
-        if (list.isEmpty()) return null;
-        return list.get(0).getName();
+        PlayerTable row = PlayerTable.forUuid(uuid);
+        if (row == null) return null;
+        return row.getName();
     }
 
     public static UUID uuidForName(String name) {
-        val list = columnsForName(name);
-        if (list.isEmpty()) return null;
-        return list.get(0).getUuid();
+        PlayerTable row = PlayerTable.forName(name);
+        if (row == null) return null;
+        return row.getUuid();
     }
 
     public static UUID uuidForLegacyName(String name) {
