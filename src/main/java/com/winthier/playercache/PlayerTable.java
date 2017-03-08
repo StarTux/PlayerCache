@@ -60,7 +60,7 @@ public final class PlayerTable {
     void save() {
         setDateUpdated(new Date());
         PlayerCachePlugin.getInstance().getSqldb().save(this);
-        nameCache.put(getName(), this);
+        nameCache.put(getName().toLowerCase(), this);
         uuidCache.put(getUuid(), this);
     }
 
