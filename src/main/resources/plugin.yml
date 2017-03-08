@@ -11,7 +11,7 @@ commands:
     usage: |-
       /<command> uuid <name> - get UUID for name
       /<command> name <uuid> - get name for UUID
-      /<command> legacy <name> - get UUID for legacy name
+      /<command> match <pattern> - match player names
 permissions:
   playercache.playercache:
     description: Use the admin interface

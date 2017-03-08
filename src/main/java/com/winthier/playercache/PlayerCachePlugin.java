@@ -1,6 +1,7 @@
 package com.winthier.playercache;
 
 import com.winthier.sql.SQLDatabase;
+import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import org.bukkit.command.Command;
@@ -42,9 +43,10 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
+        String cmd = args.length > 0 ? args[0].toLowerCase() : null;
+        if (cmd == null) {
             return false;
-        } else if (args.length == 2 && "UUID".equalsIgnoreCase(args[0])) {
+        } else if (args.length == 2 && "uuid".equals(cmd)) {
             String nameArg = args[1];
             PlayerCache cache = PlayerCache.forName(nameArg);
             if (cache == null) {
@@ -52,7 +54,7 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
             } else {
                 sender.sendMessage(String.format("Player %s has UUID %s", cache.getName(), cache.getUuid()));
             }
-        } else if (args.length == 2 && "Name".equalsIgnoreCase(args[0])) {
+        } else if (args.length == 2 && "name".equals(cmd)) {
             String uuidArg = args[1];
             UUID uuid = null;
             try {
@@ -67,6 +69,13 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
                 } else {
                     sender.sendMessage(String.format("Player %s has UUID %s", cache.getName(), cache.getUuid()));
                 }
+            }
+        } else if (args.length == 2 && "match".equals(cmd)) {
+            String matchArg = args[1];
+            List<PlayerTable> list = sqldb.find(PlayerTable.class).like("name", matchArg).orderByAscending("name").findList();
+            sender.sendMessage(String.format("Found %d player names matching %s.", list.size(), matchArg));
+            for (PlayerTable table: list) {
+                sender.sendMessage("  " + table.getName() + " - " + table.getUuid());
             }
         } else {
             return false;
