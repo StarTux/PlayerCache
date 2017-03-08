@@ -6,16 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.PersistenceException;
-import lombok.val;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class PlayerCachePlugin extends JavaPlugin {
+public final class PlayerCachePlugin extends JavaPlugin {
     private static PlayerCachePlugin instance;
     private final PlayerListener playerListener = new PlayerListener();
-    
+
     public static PlayerCachePlugin getInstance() {
         return instance;
     }
@@ -39,7 +38,7 @@ public class PlayerCachePlugin extends JavaPlugin {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String args[]) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
             return false;
         } else if (args.length == 2 && "UUID".equalsIgnoreCase(args[0])) {

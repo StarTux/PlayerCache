@@ -15,17 +15,19 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(
     name = "players",
-    uniqueConstraints = @UniqueConstraint(columnNames={"uuid"})
+    uniqueConstraints = @UniqueConstraint(columnNames = {"uuid"})
     )
 @Data
+@NoArgsConstructor
 public class PlayerTable {
-    private final static Map<UUID, PlayerTable> uuidCache = new HashMap<>();
-    private final static Map<String, PlayerTable> nameCache = new HashMap<>();
-    
+    private static Map<UUID, PlayerTable> uuidCache = new HashMap<>();
+    private static Map<String, PlayerTable> nameCache = new HashMap<>();
+
     @Id
     private Integer id;
 
@@ -33,7 +35,7 @@ public class PlayerTable {
     private UUID uuid;
 
     @NotEmpty
-    @Length(max=16)
+    @Length(max = 16)
     private String name;
 
     @NotNull
@@ -42,8 +44,6 @@ public class PlayerTable {
     @Version
     private Integer version;
 
-    public PlayerTable() {}
-    
     public PlayerTable(UUID uuid, String name) {
         setUuid(uuid);
         setName(name);

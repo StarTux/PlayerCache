@@ -6,7 +6,6 @@ import com.winthier.playercache.sql.PlayerTable;
 import java.util.List;
 import java.util.UUID;
 import lombok.Value;
-import lombok.val;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -54,5 +53,5 @@ public class PlayerCache {
             iae.printStackTrace();
         }
         return null;
-    }    
+    }
 }
