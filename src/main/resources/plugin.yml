@@ -2,9 +2,8 @@ name: PlayerCache
 description: Create a cache of player UUIDs and names for other plugins
 author: StarTux
 version: 0.1
-database: true
-main: com.winthier.playercache.bukkit.PlayerCachePlugin
-depend: []
+main: com.winthier.playercache.PlayerCachePlugin
+depend: [ SQL ]
 commands:
   playercache:
     description: Admin interface

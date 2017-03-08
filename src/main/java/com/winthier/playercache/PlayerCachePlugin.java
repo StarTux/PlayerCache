@@ -1,40 +1,43 @@
-package com.winthier.playercache.bukkit;
+package com.winthier.playercache;
 
-import com.winthier.playercache.PlayerCache;
-import com.winthier.playercache.sql.PlayerTable;
-import java.util.ArrayList;
-import java.util.List;
+import com.winthier.sql.SQLDatabase;
 import java.util.UUID;
-import javax.persistence.PersistenceException;
+import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class PlayerCachePlugin extends JavaPlugin {
-    private static PlayerCachePlugin instance;
-    private final PlayerListener playerListener = new PlayerListener();
-
-    public static PlayerCachePlugin getInstance() {
-        return instance;
-    }
+@Getter
+public final class PlayerCachePlugin extends JavaPlugin implements Listener {
+    @Getter private static PlayerCachePlugin instance;
+    private SQLDatabase sqldb;
 
     @Override
     public void onEnable() {
         this.instance = this;
-        try {
-            for (Class<?> clazz : getDatabaseClasses()) {
-                getDatabase().find(clazz).findRowCount();
-            }
-        } catch (PersistenceException ex) {
-            System.out.println("Installing database for " + getDescription().getName() + " due to first time usage");
-            installDDL();
+        sqldb = new SQLDatabase(this);
+        sqldb.registerTable(PlayerTable.class);
+        if (!sqldb.createAllTables()) {
+            getLogger().warning("Failed to create tables. Abort");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
-        getServer().getPluginManager().registerEvents(playerListener, this);
+        getServer().getPluginManager().registerEvents(this, this);
+        for (Player player: getServer().getOnlinePlayers()) {
+            logPlayer(player);
+        }
     }
 
     @Override
     public void onDisable() {
+        PlayerTable.clearCache();
+        sqldb = null;
+        instance = null;
     }
 
     @Override
@@ -65,38 +68,28 @@ public final class PlayerCachePlugin extends JavaPlugin {
                     sender.sendMessage(String.format("Player %s has UUID %s", cache.getName(), cache.getUuid()));
                 }
             }
-        } else if (args.length == 2 && "Legacy".equalsIgnoreCase(args[0])) {
-            String nameArg = args[1];
-            UUID uuid = PlayerCache.uuidForLegacyName(nameArg);
-            if (uuid == null) {
-                sender.sendMessage("Player not found: " + nameArg);
-            } else {
-                sender.sendMessage(String.format("Legacy player %s had UUID %s", nameArg, uuid));
-            }
         } else {
             return false;
         }
         return true;
     }
 
-    @Override
-    public List<Class<?>> getDatabaseClasses() {
-        List<Class<?>> result = new ArrayList<>();
-        result.add(PlayerTable.class);
-        return result;
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerLogin(PlayerLoginEvent event) {
+        logPlayer(event.getPlayer());
     }
 
-    public void logPlayer(Player player) {
+    private void logPlayer(Player player) {
         PlayerTable row = PlayerTable.forUuid(player.getUniqueId());
         if (row == null) {
             getLogger().info(String.format("Saving player %s with UUID %s", player.getName(), player.getUniqueId()));
             row = new PlayerTable(player.getUniqueId(), player.getName());
-            PlayerTable.save(row);
+            row.save();
         } else {
             if (!row.getName().equals(player.getName())) {
                 getLogger().info(String.format("Player %s with UUID %s changed their name to %s", row.getName(), row.getUuid(), player.getName()));
                 row.setName(player.getName());
-                PlayerTable.save(row);
+                row.save();
             }
         }
     }

@@ -1,16 +1,12 @@
 package com.winthier.playercache;
 
-import com.avaje.ebean.SqlRow;
-import com.winthier.playercache.bukkit.PlayerCachePlugin;
-import com.winthier.playercache.sql.PlayerTable;
-import java.util.List;
 import java.util.UUID;
 import lombok.Value;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 @Value
-public class PlayerCache {
+public final class PlayerCache {
     private final UUID uuid;
     private final String name;
 
@@ -39,19 +35,5 @@ public class PlayerCache {
         PlayerTable row = PlayerTable.forName(name);
         if (row == null) return null;
         return row.getUuid();
-    }
-
-    public static UUID uuidForLegacyName(String name) {
-        final String sql = "SELECT `uuid` FROM `legacy` WHERE name = :name";
-        final List<SqlRow> list = PlayerCachePlugin.getInstance().getDatabase().createSqlQuery(sql).setParameter("name", name).findList();
-        if (list.isEmpty()) return null;
-        if (list.size() > 1) PlayerCachePlugin.getInstance().getLogger().warning("Player " + name + " has more than one legacy UUID: " + list);
-        String uuidString = list.get(0).getString("uuid");
-        try {
-            return UUID.fromString(uuidString);
-        } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
-        }
-        return null;
     }
 }
