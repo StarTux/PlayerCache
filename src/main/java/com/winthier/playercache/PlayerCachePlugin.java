@@ -20,7 +20,7 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        this.instance = this;
+        instance = this;
         sqldb = new SQLDatabase(this);
         sqldb.registerTable(PlayerTable.class);
         if (!sqldb.createAllTables()) {
