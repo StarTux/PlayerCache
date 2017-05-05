@@ -64,6 +64,13 @@ public final class PlayerTable {
         uuidCache.put(getUuid(), this);
     }
 
+    static void fillCache() {
+        for (PlayerTable row: PlayerCachePlugin.getInstance().getSqldb().find(PlayerTable.class).orderByAscending("dateUpdated").findList()) {
+            uuidCache.put(row.uuid, row);
+            nameCache.put(row.name, row);
+        }
+    }
+
     static void clearCache() {
         uuidCache.clear();
         nameCache.clear();

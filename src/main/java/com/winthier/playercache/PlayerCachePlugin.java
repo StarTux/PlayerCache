@@ -32,6 +32,7 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
         for (Player player: getServer().getOnlinePlayers()) {
             logPlayer(player);
         }
+        PlayerTable.fillCache();
     }
 
     @Override
