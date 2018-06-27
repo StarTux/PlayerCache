@@ -24,6 +24,7 @@ public final class PlayerCache {
     }
 
     public static String nameForUuid(UUID uuid) {
+        if (PlayerCachePlugin.getInstance() == null) return null;
         final Player player = Bukkit.getServer().getPlayer(uuid);
         if (player != null) return player.getName();
         PlayerTable row = PlayerTable.forUuid(uuid);
@@ -32,6 +33,7 @@ public final class PlayerCache {
     }
 
     public static UUID uuidForName(String name) {
+        if (PlayerCachePlugin.getInstance() == null) return null;
         PlayerTable row = PlayerTable.forName(name);
         if (row == null) return null;
         return row.getUuid();
