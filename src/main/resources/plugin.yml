@@ -1,7 +1,9 @@
 name: PlayerCache
-description: Create a cache of player UUIDs and names for other plugins
+description: Cache a mapping of player names and player unique ids for other plugins
 author: StarTux
 version: 0.1
+api-version: 1.13
+website: https://cavetale.com
 main: com.winthier.playercache.PlayerCachePlugin
 depend: [ SQL ]
 commands:
