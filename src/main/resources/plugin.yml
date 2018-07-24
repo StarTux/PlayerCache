@@ -11,6 +11,7 @@ commands:
     description: Admin interface
     permission: playercache.playercache
     usage: |-
+      /<command> reload - Reload database
       /<command> uuid <name> - get UUID for name
       /<command> name <uuid> - get name for UUID
       /<command> match <pattern> - match player names

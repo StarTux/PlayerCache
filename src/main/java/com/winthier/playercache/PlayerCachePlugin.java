@@ -21,6 +21,14 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
+        setupDatabase();
+        getServer().getPluginManager().registerEvents(this, this);
+        for (Player player: getServer().getOnlinePlayers()) {
+            logPlayer(player);
+        }
+    }
+
+    void setupDatabase() {
         sqldb = new SQLDatabase(this);
         sqldb.registerTable(PlayerTable.class);
         if (!sqldb.createAllTables()) {
@@ -28,10 +36,7 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        getServer().getPluginManager().registerEvents(this, this);
-        for (Player player: getServer().getOnlinePlayers()) {
-            logPlayer(player);
-        }
+        PlayerTable.clearCache();
         PlayerTable.fillCache();
     }
 
@@ -78,6 +83,9 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
             for (PlayerTable table: list) {
                 sender.sendMessage("  " + table.getName() + " - " + table.getUuid());
             }
+        } else if (args.length == 1 && "reload".equals(cmd)) {
+            setupDatabase();
+            sender.sendMessage("Database reloaded");
         } else {
             return false;
         }
