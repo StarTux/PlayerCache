@@ -1,5 +1,6 @@
 package com.winthier.playercache;
 
+import com.winthier.generic_events.PlayerCacheEvent;
 import com.winthier.sql.SQLDatabase;
 import java.util.List;
 import java.util.UUID;
@@ -95,6 +96,15 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         logPlayer(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onPlayerCache(PlayerCacheEvent event) {
+        if (event.getUniqueId() == null) {
+            event.setUniqueId(PlayerCache.uuidForName(event.getName()));
+        } else if (event.getName() == null) {
+            event.setName(PlayerCache.nameForUuid(event.getUniqueId()));
+        }
     }
 
     private void logPlayer(Player player) {
