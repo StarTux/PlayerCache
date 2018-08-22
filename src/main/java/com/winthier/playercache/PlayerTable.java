@@ -2,6 +2,7 @@ package com.winthier.playercache;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -74,5 +75,9 @@ public final class PlayerTable {
     static void clearCache() {
         uuidCache.clear();
         nameCache.clear();
+    }
+
+    static List<PlayerTable> findAll() {
+        return PlayerCachePlugin.getInstance().getSqldb().find(PlayerTable.class).findList();
     }
 }

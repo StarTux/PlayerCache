@@ -1,6 +1,8 @@
 package com.winthier.playercache;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.Value;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -37,5 +39,9 @@ public final class PlayerCache {
         PlayerTable row = PlayerTable.forName(name);
         if (row == null) return null;
         return row.getUuid();
+    }
+
+    public static List<PlayerCache> findAll() {
+        return PlayerTable.findAll().stream().map(PlayerCache::cacheForColumn).collect(Collectors.toList());
     }
 }
