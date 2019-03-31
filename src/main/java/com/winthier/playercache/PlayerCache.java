@@ -1,11 +1,11 @@
 package com.winthier.playercache;
 
+import cn.nukkit.Player;
+import cn.nukkit.Server;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.Value;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 @Value
 public final class PlayerCache {
@@ -27,7 +27,7 @@ public final class PlayerCache {
 
     public static String nameForUuid(UUID uuid) {
         if (PlayerCachePlugin.getInstance() == null) return null;
-        final Player player = Bukkit.getServer().getPlayer(uuid);
+        final Player player = Server.getInstance().getPlayer(uuid).orElse(null);
         if (player != null) return player.getName();
         PlayerTable row = PlayerTable.forUuid(uuid);
         if (row == null) return null;

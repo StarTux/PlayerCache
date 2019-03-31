@@ -1,21 +1,20 @@
 package com.winthier.playercache;
 
-import com.winthier.generic_events.PlayerCacheEvent;
+import cn.nukkit.Player;
+import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandSender;
+import cn.nukkit.event.EventHandler;
+import cn.nukkit.event.EventPriority;
+import cn.nukkit.event.Listener;
+import cn.nukkit.event.player.PlayerLoginEvent;
+import cn.nukkit.plugin.PluginBase;
 import com.winthier.sql.SQLDatabase;
 import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
-public final class PlayerCachePlugin extends JavaPlugin implements Listener {
+public final class PlayerCachePlugin extends PluginBase implements Listener {
     @Getter private static PlayerCachePlugin instance;
     private SQLDatabase sqldb;
 
@@ -24,7 +23,7 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
         instance = this;
         setupDatabase();
         getServer().getPluginManager().registerEvents(this, this);
-        for (Player player: getServer().getOnlinePlayers()) {
+        for (Player player: getServer().getOnlinePlayers().values()) {
             logPlayer(player);
         }
     }
@@ -98,14 +97,15 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
         logPlayer(event.getPlayer());
     }
 
-    @EventHandler
-    public void onPlayerCache(PlayerCacheEvent event) {
-        if (event.getUniqueId() == null) {
-            event.setUniqueId(PlayerCache.uuidForName(event.getName()));
-        } else if (event.getName() == null) {
-            event.setName(PlayerCache.nameForUuid(event.getUniqueId()));
-        }
-    }
+    /* Zombified for Nukkit port */
+    // @EventHandler
+    // public void onPlayerCache(PlayerCacheEvent event) {
+    //     if (event.getUniqueId() == null) {
+    //         event.setUniqueId(PlayerCache.uuidForName(event.getName()));
+    //     } else if (event.getName() == null) {
+    //         event.setName(PlayerCache.nameForUuid(event.getUniqueId()));
+    //     }
+    // }
 
     private void logPlayer(Player player) {
         PlayerTable row = PlayerTable.forUuid(player.getUniqueId());
