@@ -16,6 +16,11 @@
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
     </repository>
+    <!-- Cavetale Repo -->
+    <repository>
+      <id>cavetale-repo</id>
+      <url>https://cavetale.com/jenkins/plugin/repository/everything/</url>
+    </repository>
   </repositories>
   <dependencies>
     <!-- Spigot-API -->
