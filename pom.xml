@@ -25,17 +25,25 @@
       <version>1.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
-    <!-- SQL -->
-    <dependency>
-      <groupId>com.winthier.sql</groupId>
-      <artifactId>sql-nukkit</artifactId>
-      <version>0.1-SNAPSHOT</version>
-    </dependency>
     <!-- Lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.14.8</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- SQL -->
+    <dependency>
+      <groupId>com.winthier.sql</groupId>
+      <artifactId>sql-nukkit</artifactId>
+      <version>0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- GenericEvents -->
+    <dependency>
+      <groupId>com.winthier.generic_events</groupId>
+      <artifactId>generic_events-nukkit</artifactId>
+      <version>0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

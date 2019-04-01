@@ -8,6 +8,7 @@ import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerLoginEvent;
 import cn.nukkit.plugin.PluginBase;
+import com.winthier.generic_events.PlayerCacheEvent;
 import com.winthier.sql.SQLDatabase;
 import java.util.List;
 import java.util.UUID;
@@ -97,15 +98,14 @@ public final class PlayerCachePlugin extends PluginBase implements Listener {
         logPlayer(event.getPlayer());
     }
 
-    /* Zombified for Nukkit port */
-    // @EventHandler
-    // public void onPlayerCache(PlayerCacheEvent event) {
-    //     if (event.getUniqueId() == null) {
-    //         event.setUniqueId(PlayerCache.uuidForName(event.getName()));
-    //     } else if (event.getName() == null) {
-    //         event.setName(PlayerCache.nameForUuid(event.getUniqueId()));
-    //     }
-    // }
+    @EventHandler
+    public void onPlayerCache(PlayerCacheEvent event) {
+        if (event.getUniqueId() == null) {
+            event.setUniqueId(PlayerCache.uuidForName(event.getName()));
+        } else if (event.getName() == null) {
+            event.setName(PlayerCache.nameForUuid(event.getUniqueId()));
+        }
+    }
 
     private void logPlayer(Player player) {
         PlayerTable row = PlayerTable.forUuid(player.getUniqueId());

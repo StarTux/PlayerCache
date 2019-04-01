@@ -5,7 +5,7 @@ version: "0.1"
 api: ["1.0.0"]
 website: https://cavetale.com
 main: com.winthier.playercache.PlayerCachePlugin
-depend: [ SQL ]
+depend: [ SQL, GenericEvents ]
 commands:
   playercache:
     description: Admin interface
