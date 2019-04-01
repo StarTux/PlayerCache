@@ -8,13 +8,15 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "players")
+@Table(name = "players",
+       indexes = {@Index(name = "id_name", columnList = "name")})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,6 +32,9 @@ public final class PlayerTable {
 
     @Column(nullable = false, length = 16)
     private String name;
+
+    @Column(nullable = false)
+    private int protocol = 1; // 0 = Mojang, 1 = Bedrock
 
     @Column(nullable = false)
     private Date dateUpdated;
