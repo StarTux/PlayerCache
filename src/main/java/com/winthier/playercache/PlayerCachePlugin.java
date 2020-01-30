@@ -59,7 +59,8 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
             if (cache == null) {
                 sender.sendMessage("Player not found: " + nameArg);
             } else {
-                sender.sendMessage(String.format("Player %s has UUID %s", cache.getName(), cache.getUuid()));
+                sender.sendMessage(String.format("Player %s has UUID %s",
+                                                 cache.getName(), cache.getUuid()));
             }
         } else if (args.length == 2 && "name".equals(cmd)) {
             String uuidArg = args[1];
@@ -74,13 +75,16 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
                 if (cache == null) {
                     sender.sendMessage(String.format("Player with UUID %s not found", uuid));
                 } else {
-                    sender.sendMessage(String.format("Player %s has UUID %s", cache.getName(), cache.getUuid()));
+                    sender.sendMessage(String.format("Player %s has UUID %s",
+                                                     cache.getName(), cache.getUuid()));
                 }
             }
         } else if (args.length == 2 && "match".equals(cmd)) {
             String matchArg = args[1];
-            List<PlayerTable> list = sqldb.find(PlayerTable.class).like("name", matchArg).orderByAscending("name").findList();
-            sender.sendMessage(String.format("Found %d player names matching %s.", list.size(), matchArg));
+            List<PlayerTable> list = sqldb.find(PlayerTable.class).like("name", matchArg)
+                .orderByAscending("name").findList();
+            sender.sendMessage(String.format("Found %d player names matching %s.",
+                                             list.size(), matchArg));
             for (PlayerTable table: list) {
                 sender.sendMessage("  " + table.getName() + " - " + table.getUuid());
             }
@@ -110,12 +114,14 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
     private void logPlayer(Player player) {
         PlayerTable row = PlayerTable.forUuid(player.getUniqueId());
         if (row == null) {
-            getLogger().info(String.format("Saving player %s with UUID %s", player.getName(), player.getUniqueId()));
+            getLogger().info(String.format("Saving player %s with UUID %s",
+                                           player.getName(), player.getUniqueId()));
             row = new PlayerTable(player.getUniqueId(), player.getName());
             row.save();
         } else {
             if (!row.getName().equals(player.getName())) {
-                getLogger().info(String.format("Player %s with UUID %s changed their name to %s", row.getName(), row.getUuid(), player.getName()));
+                getLogger().info(String.format("Player %s with UUID %s changed their name to %s",
+                                               row.getName(), row.getUuid(), player.getName()));
                 row.setName(player.getName());
                 row.save();
             }

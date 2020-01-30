@@ -42,6 +42,7 @@ public final class PlayerCache {
     }
 
     public static List<PlayerCache> findAll() {
-        return PlayerTable.findAll().stream().map(PlayerCache::cacheForColumn).collect(Collectors.toList());
+        return PlayerTable.findAll().stream().map(PlayerCache::cacheForColumn)
+            .collect(Collectors.toList());
     }
 }

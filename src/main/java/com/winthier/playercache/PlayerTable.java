@@ -34,20 +34,18 @@ public final class PlayerTable {
     private String name;
 
     @Column(nullable = false)
-    private int protocol = 0; // 0 = Mojang, 1 = Bedrock
-
-    @Column(nullable = false)
     private Date dateUpdated;
 
-    PlayerTable(UUID uuid, String name) {
-        setUuid(uuid);
-        setName(name);
+    PlayerTable(final UUID uuid, final String name) {
+        this.uuid = uuid;
+        this.name = name;
     }
 
     static PlayerTable forUuid(UUID uuid) {
         if (uuid == null) throw new NullPointerException("UUID cannot be null");
         if (uuidCache.containsKey(uuid)) return uuidCache.get(uuid);
-        PlayerTable result = PlayerCachePlugin.getInstance().getSqldb().find(PlayerTable.class).eq("uuid", uuid).orderByDescending("dateUpdated").findUnique();
+        PlayerTable result = PlayerCachePlugin.getInstance().getSqldb().find(PlayerTable.class)
+            .eq("uuid", uuid).orderByDescending("dateUpdated").findUnique();
         if (result == null) return null;
         uuidCache.put(uuid, result);
         return result;
@@ -57,7 +55,8 @@ public final class PlayerTable {
         if (name == null) throw new NullPointerException("Name cannot be null");
         name = name.toLowerCase();
         if (nameCache.containsKey(name)) return nameCache.get(name);
-        PlayerTable result = PlayerCachePlugin.getInstance().getSqldb().find(PlayerTable.class).eq("name", name).orderByDescending("dateUpdated").findUnique();
+        PlayerTable result = PlayerCachePlugin.getInstance().getSqldb().find(PlayerTable.class)
+            .eq("name", name).orderByDescending("dateUpdated").findUnique();
         if (result == null) return null;
         nameCache.put(name, result);
         return result;
@@ -71,7 +70,8 @@ public final class PlayerTable {
     }
 
     static void fillCache() {
-        for (PlayerTable row: PlayerCachePlugin.getInstance().getSqldb().find(PlayerTable.class).orderByAscending("dateUpdated").findList()) {
+        for (PlayerTable row: PlayerCachePlugin.getInstance().getSqldb().find(PlayerTable.class)
+                 .orderByAscending("dateUpdated").findList()) {
             uuidCache.put(row.uuid, row);
             nameCache.put(row.name, row);
         }
