@@ -1,5 +1,6 @@
 package com.winthier.playercache;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -84,5 +85,9 @@ public final class PlayerTable {
 
     static List<PlayerTable> findAll() {
         return PlayerCachePlugin.getInstance().getSqldb().find(PlayerTable.class).findList();
+    }
+
+    protected static Collection<PlayerTable> allCached() {
+        return uuidCache.values();
     }
 }
