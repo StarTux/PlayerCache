@@ -1,5 +1,8 @@
 package com.winthier.playercache;
 
+import com.cavetale.core.command.CommandArgCompleter;
+import com.cavetale.core.command.CommandContext;
+import com.cavetale.core.command.CommandNode;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -9,8 +12,8 @@ import org.bukkit.entity.Player;
 
 @Value
 public final class PlayerCache {
-    private final UUID uuid;
-    private final String name;
+    public final UUID uuid;
+    public final String name;
 
     private static PlayerCache cacheForColumn(PlayerTable table) {
         if (table == null) return null;
@@ -50,4 +53,16 @@ public final class PlayerCache {
         return PlayerTable.allCached().stream().map(PlayerCache::cacheForColumn)
             .collect(Collectors.toList());
     }
+
+    public static final CommandArgCompleter NAME_COMPLETER = new CommandArgCompleter() {
+            @Override
+            public List<String> complete(CommandContext context, CommandNode node, String arg) {
+                String lower = arg.toLowerCase();
+                return PlayerTable.allCached().stream()
+                    .map(PlayerTable::getName)
+                    .filter(name -> name.toLowerCase().contains(lower))
+                    .limit(128)
+                    .collect(Collectors.toList());
+            }
+        };
 }

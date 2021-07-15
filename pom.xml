@@ -36,10 +36,18 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- SQL -->
+    <!-- Lombok -->
     <dependency>
-      <groupId>com.winthier.sql</groupId>
-      <artifactId>sql</artifactId>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.20</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Core -->
+    <dependency>
+      <groupId>com.cavetale.core</groupId>
+      <artifactId>core</artifactId>
       <version>0.1-SNAPSHOT</version>
       <optional>true</optional>
     </dependency>
@@ -52,12 +60,12 @@
       <optional>true</optional>
     </dependency>
 
-    <!-- Lombok -->
+    <!-- SQL -->
     <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.20</version>
-      <scope>provided</scope>
+      <groupId>com.winthier.sql</groupId>
+      <artifactId>sql</artifactId>
+      <version>0.1-SNAPSHOT</version>
+      <optional>true</optional>
     </dependency>
 
   </dependencies>
