@@ -1,12 +1,17 @@
 main: com.winthier.playercache.PlayerCachePlugin
 name: PlayerCache
 description: Cache a mapping of player names and player unique ids for other plugins
+
 author: StarTux
 version: 0.1
-api-version: 1.13
+api-version: 1.17
 website: https://cavetale.com
+
 depend: [SQL, GenericEvents]
+softdepend: []
+
 commands:
+
   playercache:
     description: Admin interface
     permission: playercache.playercache
@@ -15,7 +20,9 @@ commands:
       /<command> uuid <name> - get UUID for name
       /<command> name <uuid> - get name for UUID
       /<command> match <pattern> - match player names
+
 permissions:
+
   playercache.playercache:
     description: Use the admin interface
     default: op
