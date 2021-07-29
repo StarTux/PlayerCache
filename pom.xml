@@ -52,14 +52,6 @@
       <optional>true</optional>
     </dependency>
 
-    <!-- GenericEvents -->
-    <dependency>
-      <groupId>com.winthier.generic_events</groupId>
-      <artifactId>generic_events</artifactId>
-      <version>0.1-SNAPSHOT</version>
-      <optional>true</optional>
-    </dependency>
-
     <!-- SQL -->
     <dependency>
       <groupId>com.winthier.sql</groupId>
