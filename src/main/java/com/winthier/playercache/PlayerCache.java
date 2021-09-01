@@ -28,6 +28,17 @@ public final class PlayerCache {
         return cacheForColumn(PlayerTable.forName(name));
     }
 
+    /**
+     * Find player for the given argument, which could be a name or
+     * uuid.
+     */
+    public static PlayerCache forArg(String arg) {
+        try {
+            return forUuid(UUID.fromString(arg));
+        } catch (IllegalArgumentException iae) { }
+        return forName(arg);
+    }
+
     public static String nameForUuid(UUID uuid) {
         if (PlayerCachePlugin.getInstance() == null) return null;
         final Player player = Bukkit.getServer().getPlayer(uuid);
