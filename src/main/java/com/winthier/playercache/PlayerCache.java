@@ -70,6 +70,7 @@ public final class PlayerCache {
             public List<String> complete(CommandContext context, CommandNode node, String arg) {
                 String lower = arg.toLowerCase();
                 return PlayerTable.allCached().stream()
+                    .sorted((a, b) -> b.getDateUpdated().compareTo(a.getDateUpdated()))
                     .map(PlayerTable::getName)
                     .filter(name -> name.toLowerCase().contains(lower))
                     .limit(128)
