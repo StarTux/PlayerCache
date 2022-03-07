@@ -3,7 +3,9 @@ package com.winthier.playercache;
 import com.cavetale.core.command.CommandArgCompleter;
 import com.cavetale.core.command.CommandContext;
 import com.cavetale.core.command.CommandNode;
+import com.cavetale.core.connect.Connect;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.Value;
@@ -68,12 +70,20 @@ public final class PlayerCache {
     public static final CommandArgCompleter NAME_COMPLETER = new CommandArgCompleter() {
             @Override
             public List<String> complete(CommandContext context, CommandNode node, String arg) {
-                String lower = arg.toLowerCase();
+                final String lower = arg.toLowerCase();
+                List<String> list = Connect.get().getOnlinePlayers().stream()
+                    .map(PlayerCache::nameForUuid)
+                    .filter(Objects::nonNull)
+                    .filter(theName -> theName.toLowerCase().contains(lower))
+                    .sorted(String.CASE_INSENSITIVE_ORDER)
+                    .collect(Collectors.toList());
+                if (!list.isEmpty()) return list;
                 return PlayerTable.allCached().stream()
                     .sorted((a, b) -> b.getDateUpdated().compareTo(a.getDateUpdated()))
                     .map(PlayerTable::getName)
-                    .filter(name -> name.toLowerCase().contains(lower))
+                    .filter(theName -> theName.toLowerCase().contains(lower))
                     .limit(128)
+                    .sorted(String.CASE_INSENSITIVE_ORDER)
                     .collect(Collectors.toList());
             }
         };
