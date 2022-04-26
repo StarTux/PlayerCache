@@ -3,6 +3,7 @@ package com.winthier.playercache;
 import com.cavetale.core.command.CommandArgCompleter;
 import com.cavetale.core.command.CommandContext;
 import com.cavetale.core.command.CommandNode;
+import com.cavetale.core.command.CommandWarn;
 import com.cavetale.core.connect.Connect;
 import java.util.List;
 import java.util.Objects;
@@ -87,4 +88,10 @@ public final class PlayerCache {
                     .collect(Collectors.toList());
             }
         };
+
+    public static PlayerCache require(String in) {
+        PlayerCache result = forArg(in);
+        if (result == null) throw new CommandWarn("Player not found: " + in);
+        return result;
+    }
 }
