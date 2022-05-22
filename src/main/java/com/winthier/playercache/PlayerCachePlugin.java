@@ -28,21 +28,21 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
         }
     }
 
-    void setupDatabase() {
+    private void setupDatabase() {
         sqldb = new SQLDatabase(this);
-        sqldb.registerTable(PlayerTable.class);
+        sqldb.registerTable(SQLPlayer.class);
         if (!sqldb.createAllTables()) {
             getLogger().warning("Failed to create tables. Abort");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        PlayerTable.clearCache();
-        PlayerTable.fillCache();
+        SQLPlayer.clearCache();
+        SQLPlayer.fillCache();
     }
 
     @Override
     public void onDisable() {
-        PlayerTable.clearCache();
+        SQLPlayer.clearCache();
         sqldb = null;
         instance = null;
     }
@@ -80,12 +80,12 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
             }
         } else if (args.length == 2 && "match".equals(cmd)) {
             String matchArg = args[1];
-            List<PlayerTable> list = sqldb.find(PlayerTable.class).like("name", matchArg)
+            List<SQLPlayer> list = sqldb.find(SQLPlayer.class).like("name", matchArg)
                 .orderByAscending("name").findList();
             sender.sendMessage(String.format("Found %d player names matching %s.",
                                              list.size(), matchArg));
-            for (PlayerTable table: list) {
-                sender.sendMessage("  " + table.getName() + " - " + table.getUuid());
+            for (SQLPlayer row : list) {
+                sender.sendMessage("  " + row.getName() + " - " + row.getUuid());
             }
         } else if (args.length == 1 && "reload".equals(cmd)) {
             setupDatabase();
@@ -102,11 +102,11 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
     }
 
     private void logPlayer(Player player) {
-        PlayerTable row = PlayerTable.forUuid(player.getUniqueId());
+        SQLPlayer row = SQLPlayer.forUuid(player.getUniqueId());
         if (row == null) {
             getLogger().info(String.format("Saving player %s with UUID %s",
                                            player.getName(), player.getUniqueId()));
-            row = new PlayerTable(player.getUniqueId(), player.getName());
+            row = new SQLPlayer(player.getUniqueId(), player.getName());
             row.save();
         } else {
             if (!row.getName().equals(player.getName())) {

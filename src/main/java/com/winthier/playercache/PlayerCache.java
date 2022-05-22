@@ -18,17 +18,17 @@ public final class PlayerCache {
     public final UUID uuid;
     public final String name;
 
-    private static PlayerCache cacheForColumn(PlayerTable table) {
-        if (table == null) return null;
-        return new PlayerCache(table.getUuid(), table.getName());
+    private static PlayerCache cacheForColumn(SQLPlayer row) {
+        if (row == null) return null;
+        return new PlayerCache(row.getUuid(), row.getName());
     }
 
     public static PlayerCache forUuid(UUID uuid) {
-        return cacheForColumn(PlayerTable.forUuid(uuid));
+        return cacheForColumn(SQLPlayer.forUuid(uuid));
     }
 
     public static PlayerCache forName(String name) {
-        return cacheForColumn(PlayerTable.forName(name));
+        return cacheForColumn(SQLPlayer.forName(name));
     }
 
     /**
@@ -46,25 +46,25 @@ public final class PlayerCache {
         if (PlayerCachePlugin.getInstance() == null) return null;
         final Player player = Bukkit.getServer().getPlayer(uuid);
         if (player != null) return player.getName();
-        PlayerTable row = PlayerTable.forUuid(uuid);
+        SQLPlayer row = SQLPlayer.forUuid(uuid);
         if (row == null) return null;
         return row.getName();
     }
 
     public static UUID uuidForName(String name) {
         if (PlayerCachePlugin.getInstance() == null) return null;
-        PlayerTable row = PlayerTable.forName(name);
+        SQLPlayer row = SQLPlayer.forName(name);
         if (row == null) return null;
         return row.getUuid();
     }
 
     public static List<PlayerCache> findAll() {
-        return PlayerTable.findAll().stream().map(PlayerCache::cacheForColumn)
+        return SQLPlayer.findAll().stream().map(PlayerCache::cacheForColumn)
             .collect(Collectors.toList());
     }
 
     public static List<PlayerCache> allCached() {
-        return PlayerTable.allCached().stream().map(PlayerCache::cacheForColumn)
+        return SQLPlayer.allCached().stream().map(PlayerCache::cacheForColumn)
             .collect(Collectors.toList());
     }
 
@@ -79,9 +79,9 @@ public final class PlayerCache {
                     .sorted(String.CASE_INSENSITIVE_ORDER)
                     .collect(Collectors.toList());
                 if (!list.isEmpty()) return list;
-                return PlayerTable.allCached().stream()
+                return SQLPlayer.allCached().stream()
                     .sorted((a, b) -> b.getDateUpdated().compareTo(a.getDateUpdated()))
-                    .map(PlayerTable::getName)
+                    .map(SQLPlayer::getName)
                     .filter(theName -> theName.toLowerCase().contains(lower))
                     .limit(128)
                     .sorted(String.CASE_INSENSITIVE_ORDER)
