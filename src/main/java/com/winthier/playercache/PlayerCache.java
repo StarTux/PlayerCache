@@ -94,4 +94,16 @@ public final class PlayerCache {
         if (result == null) throw new CommandWarn("Player not found: " + in);
         return result;
     }
+
+    public static PlayerCache requireForName(String in) {
+        PlayerCache result = forName(in);
+        if (result == null) throw new CommandWarn("Player not found: " + in);
+        return result;
+    }
+
+    public static PlayerCache requireForUuid(UUID in) {
+        PlayerCache result = forUuid(in);
+        if (result == null) throw new CommandWarn("Player not found: " + in);
+        return result;
+    }
 }
