@@ -17,10 +17,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class PlayerCachePlugin extends JavaPlugin implements Listener {
     @Getter private static PlayerCachePlugin instance;
     private SQLDatabase sqldb;
+    private final CoreDataSource coreDataSource = new CoreDataSource();
+
+    @Override
+    public void onLoad() {
+        instance = this;
+        coreDataSource.register();
+    }
 
     @Override
     public void onEnable() {
-        instance = this;
         setupDatabase();
         getServer().getPluginManager().registerEvents(this, this);
         for (Player player: getServer().getOnlinePlayers()) {
@@ -45,6 +51,7 @@ public final class PlayerCachePlugin extends JavaPlugin implements Listener {
         SQLPlayer.clearCache();
         sqldb = null;
         instance = null;
+        coreDataSource.unregister();
     }
 
     @Override
