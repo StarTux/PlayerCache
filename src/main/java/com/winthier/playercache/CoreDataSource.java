@@ -9,19 +9,20 @@ import java.util.List;
 import java.util.UUID;
 
 public final class CoreDataSource implements PlayerCacheDataSource {
-    private static PlayerCache cacheForColumn(SQLPlayer row) {
-        if (row == null) return null;
-        return new PlayerCache(row.getUuid(), row.getName());
-    }
-
     @Override
     public PlayerCache forUuid(UUID uuid) {
-        return cacheForColumn(SQLPlayer.forUuid(uuid));
+        com.winthier.playercache.PlayerCache player = Cache.forUuid(uuid);
+        return player != null
+            ? new PlayerCache(player.uuid, player.name)
+            : null;
     }
 
     @Override
     public PlayerCache forName(String name) {
-        return cacheForColumn(SQLPlayer.forName(name));
+        com.winthier.playercache.PlayerCache player = Cache.forName(name);
+        return player != null
+            ? new PlayerCache(player.uuid, player.name)
+            : null;
     }
 
     @Override
@@ -34,9 +35,9 @@ public final class CoreDataSource implements PlayerCacheDataSource {
             }
         }
         if (!list.isEmpty()) return list;
-        for (SQLPlayer player : SQLPlayer.allCached()) {
-            if (player.getName().toLowerCase().contains(lower)) {
-                list.add(player.getName());
+        for (String name : Cache.names()) {
+            if (name.toLowerCase().contains(lower)) {
+                list.add(name);
             }
             if (list.size() >= 128) break;
         }

@@ -10,25 +10,23 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.Value;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 @Value
 public final class PlayerCache {
     public final UUID uuid;
     public final String name;
 
-    private static PlayerCache cacheForColumn(SQLPlayer row) {
-        if (row == null) return null;
-        return new PlayerCache(row.getUuid(), row.getName());
+    public static PlayerCache of(OfflinePlayer off) {
+        return new PlayerCache(off.getUniqueId(), off.getName());
     }
 
     public static PlayerCache forUuid(UUID uuid) {
-        return cacheForColumn(SQLPlayer.forUuid(uuid));
+        return Cache.forUuid(uuid);
     }
 
     public static PlayerCache forName(String name) {
-        return cacheForColumn(SQLPlayer.forName(name));
+        return Cache.forName(name);
     }
 
     /**
@@ -43,29 +41,11 @@ public final class PlayerCache {
     }
 
     public static String nameForUuid(UUID uuid) {
-        if (PlayerCachePlugin.getInstance() == null) return null;
-        final Player player = Bukkit.getServer().getPlayer(uuid);
-        if (player != null) return player.getName();
-        SQLPlayer row = SQLPlayer.forUuid(uuid);
-        if (row == null) return null;
-        return row.getName();
+        return Cache.nameForUuid(uuid);
     }
 
     public static UUID uuidForName(String name) {
-        if (PlayerCachePlugin.getInstance() == null) return null;
-        SQLPlayer row = SQLPlayer.forName(name);
-        if (row == null) return null;
-        return row.getUuid();
-    }
-
-    public static List<PlayerCache> findAll() {
-        return SQLPlayer.findAll().stream().map(PlayerCache::cacheForColumn)
-            .collect(Collectors.toList());
-    }
-
-    public static List<PlayerCache> allCached() {
-        return SQLPlayer.allCached().stream().map(PlayerCache::cacheForColumn)
-            .collect(Collectors.toList());
+        return Cache.uuidForName(name);
     }
 
     public static final CommandArgCompleter NAME_COMPLETER = new CommandArgCompleter() {
@@ -79,9 +59,7 @@ public final class PlayerCache {
                     .sorted(String.CASE_INSENSITIVE_ORDER)
                     .collect(Collectors.toList());
                 if (!list.isEmpty()) return list;
-                return SQLPlayer.allCached().stream()
-                    .sorted((a, b) -> b.getDateUpdated().compareTo(a.getDateUpdated()))
-                    .map(SQLPlayer::getName)
+                return Cache.names().stream()
                     .filter(theName -> theName.toLowerCase().contains(lower))
                     .limit(128)
                     .sorted(String.CASE_INSENSITIVE_ORDER)
