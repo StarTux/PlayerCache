@@ -55,7 +55,7 @@ public final class Cache {
                     broadcast(log);
                 });
         } else {
-            database().updateAsync(row, Set.of("name", "dateUpdated"), r -> {
+            database().saveAsync(row, Set.of("name", "dateUpdated"), r -> {
                     info("Name change: " + row + " result=" + r);
                     broadcast(log);
                 });
