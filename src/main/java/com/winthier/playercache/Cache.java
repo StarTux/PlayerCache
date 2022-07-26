@@ -72,7 +72,8 @@ public final class Cache {
             return null;
         }
         PlayerCache result = new PlayerCache(row.getUuid(), row.getName());
-        store(result);
+        INSTANCE.uuidMap.put(result.uuid, result);
+        INSTANCE.names.add(result.name);
         return result;
     }
 
